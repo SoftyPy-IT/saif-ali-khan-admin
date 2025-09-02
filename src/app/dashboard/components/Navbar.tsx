@@ -53,6 +53,7 @@ const Navbar = () => {
           <h3 className="text-[#3D93C1] font-bold text-lg">Saif Ali Khan</h3>
           <p className="text-xs text-gray-900">Businessmen & Politician</p>
         </div>
+        {/* image */}
         <Image
           className="rounded-full w-[50px] h-[50px] border-2 border-blue-700"
           src={"/Images/saifalikhan.jpg"}
