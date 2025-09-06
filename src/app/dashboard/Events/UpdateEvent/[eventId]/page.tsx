@@ -96,7 +96,7 @@ const UpdateEventInfo = () => {
   };
 
   return (
-    <div className="h-full min-h-[500px]">
+    <div className="h-full min-h-[500px] text-black">
       <Link href={"/dashboard/Events"}>
         <button className='text-rose-600 px-3 py-1 border border-rose-600 flex flex-row active:scale-95 gap-2 item-center justify-center bg-white '><span className='  text-xl '><FaArrowAltCircleRight /></span> <p>Back</p></button>
       </Link>

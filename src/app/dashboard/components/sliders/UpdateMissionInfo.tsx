@@ -69,7 +69,7 @@ const UpdateMissionInfo = ({setUpdateMission}:{setUpdateMission:(value:boolean)=
   };
  
   return (
-    <div className=' h-full min-h-[500px] '>
+    <div className=' h-full min-h-[500px] text-black'>
 
      <div>
         <Drawer open={open} onClose={() => toggleDrawer(false)}>

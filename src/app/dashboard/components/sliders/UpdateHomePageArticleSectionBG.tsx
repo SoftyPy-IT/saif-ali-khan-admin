@@ -88,7 +88,7 @@ const UpdateHomePageArticleSectionBG = ({setOpenModalForUpdate}:{setOpenModalFor
 
 
   return (
-    <div className=' w-full  h-full min-h-[500px]'>
+    <div className=' w-full  h-full min-h-[500px] text-black'>
             {/* drawer for photo  */}
         <div>
         <Drawer open={openForPhoto} onClose={() => toggleDrawerForPhoto(false)}>

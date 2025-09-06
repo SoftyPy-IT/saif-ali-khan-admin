@@ -17,7 +17,7 @@ const UpdateUserInfo = () => {
 
 
   return (
-    <div className=' h-full min-h-[500px] '>
+    <div className=' h-full min-h-[500px] text-black'>
      <div className='max-w-4xl px-6 pt-20 flex flex-col  gap-10 justify-between items-center pb-32'>    
      <label htmlFor="upload profile picture">
     <div onClick={()=>document.getElementById('upload_image')?.click()} className='flex items-center flex-col justify-center p-5 border border-blue-700 bg-white'>

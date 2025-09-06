@@ -105,7 +105,7 @@ const UpdateArticleInfo = () => {
 
   return (
 
-<div className=' h-full'>
+<div className=' h-full text-black'>
  
  <Link href={"/dashboard/Articles"}>
  <button className='text-rose-600 px-3  py-1 border border-rose-600 flex flex-row active:scale-95 gap-2 item-center justify-center bg-white'><span className=' text-xl'><FaArrowAltCircleLeft /></span> <p>Back</p></button>

@@ -55,7 +55,7 @@ const UpdateBiographyItem: React.FC<UpdateBiographyItemProps> = ({ bioId,setOpen
   };
 
   return (
-    <div className=' h-full min-h-[500px] '>
+    <div className=' h-full min-h-[500px] text-black'>
     <form onSubmit={handleSubmit}>
       <div className='max-w-4xl 2xl:mt-28 px-6 pt-10 flex flex-col  gap-10 justify-between items-center pb-20'> 
       <div className="flex flex-col gap-1">

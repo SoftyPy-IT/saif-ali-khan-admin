@@ -62,7 +62,7 @@ const {data:journeyToPolitics} = useQuery({
   };
 
   return (
-    <div className="h-full min-h-[500px]">
+    <div className="h-full min-h-[500px] text-black">
       
 
       <form onSubmit={handleSubmit}>
