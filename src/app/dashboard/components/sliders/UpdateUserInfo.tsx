@@ -30,7 +30,7 @@ const UpdateUserInfo = () => {
      
    <input
   type="text"
-  defaultValue={'Saif Ali Khan'}
+  defaultValue={'H M Saif Ali Khan'}
   placeholder="Name"
   className="md:w-[350px] w-[250px] bg-white border border-blue-700  px-4 py-2 focus:outline-none "
 />
