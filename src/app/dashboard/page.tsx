@@ -16,7 +16,7 @@ export default function Dashboard() {
         </div>
         <h3 className="text-center text-3xl text-gray-500 mt-6 ">
           Welcome!
-          <span className=" text-orange-600 font-bold"> Saif Ali Khan</span>
+          <span className=" text-orange-600 font-bold">H M Saif Ali Khan</span>
         </h3>
       </div>
     </div>

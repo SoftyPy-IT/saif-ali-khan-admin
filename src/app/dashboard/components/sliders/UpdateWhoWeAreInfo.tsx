@@ -7,15 +7,15 @@ import { Drawer, TextField } from '@mui/material';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import {CiEdit } from 'react-icons/ci';
+import { CiEdit } from 'react-icons/ci';
 import UploadVideoSlider from './UploadVideoSlider/UploadVideoSlider';
 import Image from 'next/image';
 
 
 
-  const  UpdateWhoWeAreInfo = ({setOpenModalForUpdate}:{setOpenModalForUpdate:(value:boolean)=>void}) => {
-  const [features,isLoading] = useFeatures();
-  const data:TWhoWeAre = (features as TFeatures)?.whoWeAre
+const UpdateWhoWeAreInfo = ({ setOpenModalForUpdate }: { setOpenModalForUpdate: (value: boolean) => void }) => {
+  const [features, isLoading] = useFeatures();
+  const data: TWhoWeAre = (features as TFeatures)?.whoWeAre
   const toggleDrawer = (newOpen: boolean) => setOpen(newOpen);
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
@@ -24,7 +24,7 @@ import Image from 'next/image';
   const axiosPublic = useAxiosPublic();
 
 
-  
+
 
   useEffect(() => {
     if (!videoId) return;
@@ -43,7 +43,7 @@ import Image from 'next/image';
 
   const updateMutation = useMutation({
     mutationFn: async ({ id, whoWeAreData }: { id: string; whoWeAreData: Partial<TWhoWeAre> }) => {
-      const response = await apiClient.patch(`/features/${id}`, {whoWeAre: whoWeAreData});
+      const response = await apiClient.patch(`/features/${id}`, { whoWeAre: whoWeAreData });
       return response.data.data;
     },
     onSuccess: () => {
@@ -58,74 +58,74 @@ import Image from 'next/image';
       console.error('Update error:', error);
     },
   });
-  
-  const handleSubmit = (e: { preventDefault: () => void; target: any; } ) => {
+
+  const handleSubmit = (e: { preventDefault: () => void; target: any; }) => {
     e.preventDefault();
     const form = e.target;
-    const whoWeAreData:Partial<TWhoWeAre> = {
-      title:form.title.value,
-      description:form.description.value,
-      videoUrl:videoId ? videoUrl : data?.videoUrl,
+    const whoWeAreData: Partial<TWhoWeAre> = {
+      title: form.title.value,
+      description: form.description.value,
+      videoUrl: videoId ? videoUrl : data?.videoUrl,
     };
 
-    updateMutation.mutate({ id:features._id as string, whoWeAreData});
-   console.log(whoWeAreData, data);
+    updateMutation.mutate({ id: features._id as string, whoWeAreData });
+    console.log(whoWeAreData, data);
   };
 
 
   return (
-    <div className='h-full min-h-[500px]'>    
+    <div className='h-full min-h-[500px] text-black'>
       <div>
         <Drawer open={open} onClose={() => toggleDrawer(false)}>
           <UploadVideoSlider videoId={setVideoId} toggleDrawer={toggleDrawer} />
         </Drawer>
-      </div> 
-  {
- !isLoading &&
- <form onSubmit={handleSubmit}>
-  <div className='max-w-4xl 2xl:mt-28 px-6 pt-10 flex flex-col  gap-10 justify-between items-center pb-20'>    
-  {videoUrl || videoId ? (
-  <div className="w-[150px] h-[150px] relative">
-    <CiEdit
-      className="absolute z-30 text-red-600 text-4xl hover:text-red-800 active:scale-90 right-0 top-0 bg-white rounded-full"
-      onClick={() => toggleDrawer(true)}
-    />
+      </div>
+      {
+        !isLoading &&
+        <form onSubmit={handleSubmit}>
+          <div className='max-w-4xl 2xl:mt-28 px-6 pt-10 flex flex-col  gap-10 justify-between items-center pb-20'>
+            {videoUrl || videoId ? (
+              <div className="w-[150px] h-[150px] relative">
+                <CiEdit
+                  className="absolute z-30 text-red-600 text-4xl hover:text-red-800 active:scale-90 right-0 top-0 bg-white rounded-full"
+                  onClick={() => toggleDrawer(true)}
+                />
 
-     <Image alt='photo' src="/Images/videoUploadLogo.jpg" height={600} width={800} className='w-[160px] h-[120px] '/> 
-     <p>{videoUrl?.split('-')?.[1]}</p>
+                <Image alt='photo' src="/Images/videoUploadLogo.jpg" height={600} width={800} className='w-[160px] h-[120px] ' />
+                <p>{videoUrl?.split('-')?.[1]}</p>
 
-  </div>
-) : (
-  <div className="w-[150px] h-[150px] relative">
-    <CiEdit
-      className="absolute z-30 text-red-600 text-4xl hover:text-red-800 active:scale-90 right-0 top-0 bg-white rounded-full"
-      onClick={() => toggleDrawer(true)}
-    />
+              </div>
+            ) : (
+              <div className="w-[150px] h-[150px] relative">
+                <CiEdit
+                  className="absolute z-30 text-red-600 text-4xl hover:text-red-800 active:scale-90 right-0 top-0 bg-white rounded-full"
+                  onClick={() => toggleDrawer(true)}
+                />
 
-<Image alt='photo' src="/Images/videoUploadLogo.jpg" height={600} width={800} className='w-[160px] h-[120px] '/> 
-<p>{data?.videoUrl.split('-')?.[1]}</p>
+                <Image alt='photo' src="/Images/videoUploadLogo.jpg" height={600} width={800} className='w-[160px] h-[120px] ' />
+                <p>{data?.videoUrl.split('-')?.[1]}</p>
 
-  </div>
-)}
+              </div>
+            )}
 
-     
-     <TextField 
-     name='title'
-     defaultValue={data?.title}
-     className='md:w-[350px] w-[250px] bg-white' id="outlined-basic" label="Title" variant="outlined" />
-     <TextField 
-     name='description'
-     defaultValue={data?.description}
-     multiline
-     className='md:w-[350px] w-[250px] bg-white' id="outlined-multiline-static" label="Sort Description" variant="outlined" rows={4}/>
-       
-      <input type="submit" value="Update" className='md:w-[350px] text-white w-[250px] bg-[#3D93C1] py-2 px-3 active:scale-95' />  
-     </div>
-  </form>
-  }
+
+            <TextField
+              name='title'
+              defaultValue={data?.title}
+              className='md:w-[350px] w-[250px] bg-white' id="outlined-basic" label="Title" variant="outlined" />
+            <TextField
+              name='description'
+              defaultValue={data?.description}
+              multiline
+              className='md:w-[350px] w-[250px] bg-white' id="outlined-multiline-static" label="Sort Description" variant="outlined" rows={4} />
+
+            <input type="submit" value="Update" className='md:w-[350px] text-white w-[250px] bg-[#3D93C1] py-2 px-3 active:scale-95' />
+          </div>
+        </form>
+      }
     </div>
   );
 };
 
-export default  UpdateWhoWeAreInfo;
+export default UpdateWhoWeAreInfo;
 

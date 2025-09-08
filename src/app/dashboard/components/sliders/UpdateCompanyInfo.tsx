@@ -95,7 +95,7 @@ const UpdateCompanyInfo = ({setOpenModalForUpdate}:{setOpenModalForUpdate:(value
 
   };
   return (
-    <div className=' h-full min-h-[500px] '>
+    <div className=' h-full min-h-[500px] text-black'>
                    {/* slider for bg image  */}
        <div>
         <Drawer open={openForBgImage} onClose={() => toggleDrawerForBgImage(false)}>

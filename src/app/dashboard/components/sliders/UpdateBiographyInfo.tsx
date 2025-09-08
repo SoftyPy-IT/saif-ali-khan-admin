@@ -89,7 +89,7 @@ const UpdateBiographyInfo: React.FC<UpdateBiographyInfoProps> = ({ bioId,setOpen
   };
 
   return (
-    <div className="h-full min-h-[500px]">
+    <div className="h-full min-h-[500px] text-black">
       <div>
         <Drawer open={open} onClose={() => toggleDrawer(false)}>
           <UploadImageSlider photoId={setPhotoId} toggleDrawer={toggleDrawer} />
