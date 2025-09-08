@@ -8,8 +8,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { CiEdit } from "react-icons/ci";
-import UploadVideoSlider from "./UploadVideoSlider/UploadVideoSlider";
+// import UploadVideoSlider from "./UploadVideoSlider/UploadVideoSlider";
 import Image from "next/image";
+import UploadImageSlider from "./uploadImageSlider/UploadImageSlider";
 
 const UpdateBannerInfo = ({
   setOpenModalForUpdate,
@@ -21,24 +22,39 @@ const UpdateBannerInfo = ({
   const toggleDrawer = (newOpen: boolean) => setOpen(newOpen);
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
-  const [videoUrl, setVideoUrl] = useState<string | undefined>();
-  const [videoId, setVideoId] = useState("");
+  const [imageUrl, setImageUrl] = useState<string | undefined>();
+  const [photoId, setPhotoId] = useState("");
   const axiosPublic = useAxiosPublic();
 
   useEffect(() => {
-    if (!videoId) return;
+    if (!photoId) return;
 
-    const fetchVideoData = async () => {
+    const fetchPhotoData = async () => {
       try {
-        const response = await axiosPublic.get(`/videos/${videoId}`);
-        setVideoUrl(response?.data?.data?.videoUrl);
+        const response = await axiosPublic.get(`/photos/${photoId}`);
+        setImageUrl(response?.data?.data?.imageUrl);
       } catch (error) {
         console.error("Error fetching photo data:", error);
       }
     };
 
-    fetchVideoData();
-  }, [videoId, axiosPublic]);
+    fetchPhotoData();
+  }, [photoId, axiosPublic]);
+
+  // useEffect(() => {
+  //   if (!videoId) return;
+
+  //   const fetchVideoData = async () => {
+  //     try {
+  //       const response = await axiosPublic.get(`/videos/${videoId}`);
+  //       setVideoUrl(response?.data?.data?.videoUrl);
+  //     } catch (error) {
+  //       console.error("Error fetching photo data:", error);
+  //     }
+  //   };
+
+  //   fetchVideoData();
+  // }, [videoId, axiosPublic]);
 
   const updateMutation = useMutation({
     mutationFn: async ({
@@ -72,7 +88,8 @@ const UpdateBannerInfo = ({
     const bannerData: Partial<TBanner> = {
       name: form.name.value,
       designation: form.designation.value,
-      videoUrl: videoId ? videoUrl : data?.videoUrl,
+      partyname: form.partyname.value,
+      image: photoId ? imageUrl : data?.image,
     };
 
     updateMutation.mutate({ id: features._id as string, bannerData });
@@ -81,48 +98,49 @@ const UpdateBannerInfo = ({
   };
 
   return (
-    <div className=" h-full min-h-[500px]  text-black">
+    <div className="h-full min-h-[500px] text-black">
       <div>
         <Drawer open={open} onClose={() => toggleDrawer(false)}>
-          <UploadVideoSlider videoId={setVideoId} toggleDrawer={toggleDrawer} />
+          <UploadImageSlider photoId={setPhotoId} toggleDrawer={toggleDrawer} />
         </Drawer>
+        {/* <Drawer open={open} onClose={() => toggleDrawer(false)}>
+          <UploadVideoSlider videoId={setVideoId} toggleDrawer={toggleDrawer} />
+        </Drawer> */}
       </div>
       {!isLoading && (
         <form onSubmit={handleSubmit}>
           <div className="max-w-4xl 2xl:mt-28  px-6 pt-10 flex flex-col  gap-10 justify-between items-center pb-20">
-            {videoUrl || videoId ? (
-              <div className="w-[150px] h-[150px] relative">
-                <CiEdit
-                  className="absolute z-30 text-red-600 text-4xl hover:text-red-800 active:scale-90 right-0 top-0 bg-white rounded-full"
-                  onClick={() => toggleDrawer(true)}
-                />
-
-                <Image
-                  alt="photo"
-                  src="/Images/videoUploadLogo.jpg"
-                  height={600}
-                  width={800}
-                  className="w-[160px] h-[120px] "
-                />
-                <p>{videoUrl?.split("-")?.[1]}</p>
-              </div>
-            ) : (
-              <div className="w-[150px] h-[150px] relative">
-                <CiEdit
-                  className="absolute z-30 text-red-600 text-4xl hover:text-red-800 active:scale-90 right-0 top-0 bg-white rounded-full"
-                  onClick={() => toggleDrawer(true)}
-                />
-
-                <Image
-                  alt="photo"
-                  src="/Images/videoUploadLogo.jpg"
-                  height={600}
-                  width={800}
-                  className="w-[160px] h-[120px] "
-                />
-                {/* <p>{data?.videoUrl.split('-')?.[1]}</p> */}
-              </div>
-            )}
+            <div className="w-full flex justify-center">
+              {photoId ? (
+                <div className="w-[150px] h-[150px] rounded-full relative">
+                  <CiEdit
+                    className="absolute text-red-600 text-4xl hover:text-red-800 active:scale-90 right-0 top-0 bg-white rounded-full"
+                    onClick={() => toggleDrawer(true)}
+                  />
+                  <Image
+                    alt="Event Photo"
+                    src={imageUrl as string}
+                    height={600}
+                    width={800}
+                    className="w-[150px] h-[150px] rounded-full"
+                  />
+                </div>
+              ) : (
+                <div className="w-[150px] h-[150px] rounded-full relative">
+                  <CiEdit
+                    className="absolute text-red-600 text-4xl hover:text-red-800 active:scale-90 right-0 top-0 bg-white rounded-full"
+                    onClick={() => toggleDrawer(true)}
+                  />
+                  <Image
+                    alt="Event Placeholder"
+                    src={data?.image}
+                    height={600}
+                    width={800}
+                    className="w-[150px] h-[150px] rounded-full"
+                  />
+                </div>
+              )}
+            </div>
 
             <TextField
               name="name"
@@ -137,7 +155,15 @@ const UpdateBannerInfo = ({
               defaultValue={data?.designation}
               className="md:w-[350px] w-[250px] bg-white"
               id="outlined-basic"
-              label="Phone"
+              label="Designation"
+              variant="outlined"
+            />
+            <TextField
+              name="partyname"
+              defaultValue={data?.partyname}
+              className="md:w-[350px] w-[250px] bg-white"
+              id="outlined-basic"
+              label="Party Name"
               variant="outlined"
             />
 

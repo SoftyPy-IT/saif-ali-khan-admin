@@ -44,8 +44,8 @@ const Sidebar = () => {
             {/* logo section  */}
       <div className='flex flex-row lg:justify-center w-full justify-between item-center border-b-2 shadow'>
         <Image
-          className='w-[140px] h-[58px]'
-        src={'/Images/logo.png'} alt='logo' width={200} height={100}/>
+          className='w-[100px] h-[58px]'
+        src={'/Images/logo.webp'} alt='logo' width={200} height={100}/>
      
       </div>
 
