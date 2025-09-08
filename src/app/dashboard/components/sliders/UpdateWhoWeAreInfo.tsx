@@ -86,8 +86,6 @@ const UpdateWhoWeAreInfo = ({
       {!isLoading && (
         <form onSubmit={handleSubmit}>
           <div className="max-w-4xl 2xl:mt-28 px-6 pt-10 flex flex-col  gap-10 justify-between items-center pb-0">
-            
-
             <TextField
               name="videourl"
               defaultValue={data?.videourl}
@@ -105,7 +103,7 @@ const UpdateWhoWeAreInfo = ({
               label="Title"
               variant="outlined"
             />
-
+            {/* description */}
             <TextField
               name="description"
               defaultValue={data?.description}
