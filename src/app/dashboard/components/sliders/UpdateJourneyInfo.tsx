@@ -1,77 +1,84 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from 'react';
-import useAxiosPublic from '@/axios/useAxiosPublic';
-import apiClient from '@/axios/axiosInstant';
-import toast from 'react-hot-toast';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { TJourneyToPolitics} from '@/types/types';
+import React from "react";
+import useAxiosPublic from "@/axios/useAxiosPublic";
+import apiClient from "@/axios/axiosInstant";
+import toast from "react-hot-toast";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { TJourneyToPolitics } from "@/types/types";
 
 interface UpdateJourneyInfoProps {
   journeyToPoliticsId: string;
-  setOpenModalForUpdate:(value:boolean)=>void
+  setOpenModalForUpdate: (value: boolean) => void;
 }
 
-const UpdateJourneyInfo: React.FC<UpdateJourneyInfoProps> = ({ journeyToPoliticsId,setOpenModalForUpdate }) => {
+const UpdateJourneyInfo: React.FC<UpdateJourneyInfoProps> = ({
+  journeyToPoliticsId,
+  setOpenModalForUpdate,
+}) => {
   const queryClient = useQueryClient();
   const axiosPublic = useAxiosPublic();
 
-            //  getting journeyToPolitics
-const {data:journeyToPolitics} = useQuery({
-  queryKey:["journeyToPolitics",journeyToPoliticsId],
-  queryFn:async()=>{  
-    const response = await axiosPublic.get(`/journey-to-politics/${journeyToPoliticsId}`);
-    return response.data.data;
-  }
-
-})
-
-
-
-  const updateMutation = useMutation({
-    mutationFn: async ({ id, data,e }: { id: string; data: Partial<TJourneyToPolitics>,e: { preventDefault: () => void; target: any; }}) => {
-      const response = await apiClient.patch(`/journey-to-politics/${id}`, data);
-      if(response.data.success===true){
-        e.target.reset();
-        return response.data.data;
-      }
-     
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['journeyToPolitics'] });
-      toast.success('journeyToPolitics Updated Successfully');
-      setOpenModalForUpdate(false)
-    },
-    onError: (error: any) => {
-      toast.error(error.response.data.message||'Failed to update journeyToPolitics');
-      console.error('Update error:', error);
+  // getting journeyToPolitics
+  const { data: journeyToPolitics } = useQuery({
+    queryKey: ["journeyToPolitics", journeyToPoliticsId],
+    queryFn: async () => {
+      const response = await axiosPublic.get(
+        `/journey-to-politics/${journeyToPoliticsId}`
+      );
+      return response.data.data;
     },
   });
 
-  const handleSubmit = (e: { preventDefault: () => void; target: any; } ) => {
-    e.preventDefault();
-    const form = e.target;
+  const updateMutation = useMutation({
+    mutationFn: async ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: Partial<TJourneyToPolitics>;
+    }) => {
+      const response = await apiClient.patch(
+        `/journey-to-politics/${id}`,
+        data
+      );
+      if (response.data.success === true) {
+        return response.data.data;
+      }
+      throw new Error(response.data.message || "Update failed");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["journeyToPolitics"] });
+      toast.success("Journey Updated Successfully");
+      setOpenModalForUpdate(false);
+    },
+    onError: (error: any) => {
+      toast.error(
+        error.response?.data?.message || "Failed to update journey"
+      );
+      console.error("Update error:", error);
+    },
+  });
 
-    const data: Partial<TJourneyToPolitics> = {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
     
-      title: form.title.value,
-      
-     
+    const data: Partial<TJourneyToPolitics> = {
+      title: (form.elements.namedItem('title') as HTMLInputElement).value,
+      shortDescription: (form.elements.namedItem('shortDescription') as HTMLInputElement).value,
     };
 
-    updateMutation.mutate({ id:journeyToPoliticsId, data ,e});
+    updateMutation.mutate({ id: journeyToPoliticsId, data });
   };
 
   return (
     <div className="h-full min-h-[500px] text-black">
-      
-
       <form onSubmit={handleSubmit}>
         <div className="max-w-4xl 2xl:mt-28 px-6 pt-10 flex flex-col gap-10 justify-between items-center pb-20">
           <section className="flex flex-col lg:flex-row gap-16">
-            {/* Left Panel: Image, Title, , Date */}
+            {/* Left Panel: Title, Short Description */}
             <div className="flex flex-col gap-[20px]">
-              
-            <div className="flex flex-col gap-1">
+              <div className="flex flex-col gap-1">
                 <label htmlFor="title">Title</label>
                 <input
                   required
@@ -92,20 +99,16 @@ const {data:journeyToPolitics} = useQuery({
                   type="text"
                 />
               </div>
-             
-
-             
             </div>
-
-          
           </section>
 
-          <input
-        
+          <button
             type="submit"
-            value="Submit"
-            className="md:w-[350px] text-white w-[250px] bg-orange-600 py-2 px-3 active:scale-95 lg:w-full"
-          />
+            disabled={updateMutation.isPending}
+            className="md:w-[350px] text-white w-[250px] bg-orange-600 py-2 px-3 active:scale-95 lg:w-full disabled:bg-gray-400"
+          >
+            {updateMutation.isPending ? "Updating..." : "Submit"}
+          </button>
         </div>
       </form>
     </div>
@@ -113,5 +116,3 @@ const {data:journeyToPolitics} = useQuery({
 };
 
 export default UpdateJourneyInfo;
-
-
