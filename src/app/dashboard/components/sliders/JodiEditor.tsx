@@ -55,7 +55,8 @@ const MillatEditor: React.FC<MillatEditorProps> = ({
         value={editorValue}
         config={config}
         onBlur={(newContent) => handleEditorChange(newContent)}
-        onChange={() => {}}
+     
+          onChange={(newContent) => handleEditorChange(newContent)} 
       />
     </div>
   );
