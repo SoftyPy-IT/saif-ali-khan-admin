@@ -6,6 +6,7 @@ export default function Dashboard() {
     <div className="bg-[url(/Images/bg-image-modal.jpg)] bg-cover bg-center w-full h-full flex justify-center item-center">
       <div className="mt-32 2xl:mt-52 w-[450px] flex flex-col items-center">
         <div>
+          {/* image */}
           <Image
             src={logo}
             alt="profile image"
