@@ -11,6 +11,7 @@ import { CiEdit } from "react-icons/ci";
 // import UploadVideoSlider from "./UploadVideoSlider/UploadVideoSlider";
 import Image from "next/image";
 import UploadImageSlider from "./uploadImageSlider/UploadImageSlider";
+import MillatEditor from "./JodiEditor";
 
 const UpdateBannerInfo = ({
   setOpenModalForUpdate,
@@ -25,6 +26,9 @@ const UpdateBannerInfo = ({
   const [imageUrl, setImageUrl] = useState<string | undefined>();
   const [photoId, setPhotoId] = useState("");
   const axiosPublic = useAxiosPublic();
+const [designation, setDesignation] = useState(data?.designation || "");
+
+
 
   useEffect(() => {
     if (!photoId) return;
@@ -33,6 +37,7 @@ const UpdateBannerInfo = ({
       try {
         const response = await axiosPublic.get(`/photos/${photoId}`);
         setImageUrl(response?.data?.data?.imageUrl);
+ 
       } catch (error) {
         console.error("Error fetching photo data:", error);
       }
@@ -87,8 +92,8 @@ const UpdateBannerInfo = ({
 
     const bannerData: Partial<TBanner> = {
       name: form.name.value,
-      designation: form.designation.value,
-      partyname: form.partyname.value,
+      designation,
+      // partyname: form.partyname.value,
       image: photoId ? imageUrl : data?.image,
     };
 
@@ -150,22 +155,29 @@ const UpdateBannerInfo = ({
               label="Name"
               variant="outlined"
             />
-            <TextField
+
+            <MillatEditor
+              name="designation"
+              value={data?.designation}
+              onChange={setDesignation}
+            />
+
+            {/* <TextField
               name="designation"
               defaultValue={data?.designation}
               className="md:w-[350px] w-[250px] bg-white"
               id="outlined-basic"
               label="Designation"
               variant="outlined"
-            />
-            <TextField
+            /> */}
+            {/* <TextField
               name="partyname"
               defaultValue={data?.partyname}
               className="md:w-[350px] w-[250px] bg-white"
               id="outlined-basic"
               label="Party Name"
               variant="outlined"
-            />
+            /> */}
 
             <input
               type="submit"
