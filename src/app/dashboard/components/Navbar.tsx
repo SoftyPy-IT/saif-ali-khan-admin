@@ -21,7 +21,7 @@ const Navbar = () => {
       <div className="lg:hidden">
         {/* overlay  */}
         <div
-          className={`  ${
+          className={` ${
             openSidebar ? "fixed inset-0 z-20 bg-black bg-opacity-50 " : " "
           }`}
         ></div>
@@ -50,13 +50,13 @@ const Navbar = () => {
       </div>
       <div className="flex items-center gap-2 mr-0">
         <div>
-          <h3 className="text-[#3D93C1] font-bold text-lg">H M Saif Ali Khan</h3>
+          <h3 className="text-[#3D93C1] font-bold text-lg">Arifur Rahman</h3>
           <p className="text-xs text-gray-900">Businessmen & Politician</p>
         </div>
         {/* image */}
         <Image
           className="rounded-full w-[50px] h-[50px] border-2 border-blue-700"
-          src={"/Images/saifalikhan.jpg"}
+          src={"/Images/ar.jpg"}
           height={40}
           width={40}
           alt="image"

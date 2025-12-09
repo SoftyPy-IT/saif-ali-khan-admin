@@ -17,7 +17,7 @@ import AddNewUser from "../components/sliders/AddNewUser";
 const rows = [
   {
     id: 1,
-    name: "Saif Ali Khan",
+    name: "Arifur Rahman",
     imageUrl: "/Images/mr-18.jpg",
     email: "info@shouravgroup-bd.com",
     currentRole: "Admin",
@@ -26,7 +26,7 @@ const rows = [
   },
   {
     id: 2,
-    name: "Saif Ali Khan",
+    name: "Arifur Rahman",
     imageUrl: "/Images/mr-18.jpg",
     email: "info@shouravgroup-bd.com",
     currentRole: "Editor",
