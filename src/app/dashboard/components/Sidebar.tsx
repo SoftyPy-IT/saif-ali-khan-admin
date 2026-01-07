@@ -222,8 +222,8 @@ const routes:Nav[] = [
     icon:<RiArticleFill />
   },
   {
-    navItem:'Voice On Media',
-    path:'/dashboard/VoiceOnMedia',
+    navItem:'Videos',
+    path:'/dashboard/Videos',
     icon:<MdPermMedia />
   },
   {

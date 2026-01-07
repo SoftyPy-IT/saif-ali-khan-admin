@@ -1,11 +1,11 @@
 {
-  "name": "saif-ali-khan-dashboard",
+  "name": "arifur-rahman-dashboard",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start -p 9002",
+    "start": "next start -p 4001",
     "lint": "next lint"
   },
   "dependencies": {

@@ -35,9 +35,9 @@ const WhoWeAre = () => {
               onClick={() => setOpenModalForUpdate(!openModalForUpdate)}
               className="text-rose-600 px-3 py-1 border border-rose-600 flex flex-row active:scale-95 gap-2 item-center justify-center bg-white absolute left-0 top-0"
             >
-              <span className="  text-xl ">
+              <span className="text-xl">
                 <FaArrowAltCircleRight />
-              </span>{" "}
+              </span>
               <p>Back</p>
             </button>
             <UpdateWhoWeAreInfo setOpenModalForUpdate={setOpenModalForUpdate} />
@@ -67,11 +67,11 @@ const WhoWeAre = () => {
             src="/Images/loading.gif"
             height={600}
             width={800}
-            className="w-[80px] h-[80px] "
+            className="w-[80px] h-[80px]"
           />
         </div>
       ) : (
-        <section className="mx-8  ">
+        <section className="mx-8">
           <TableContainer
             component={Paper}
             sx={{ maxWidth: "100%", marginTop: "20px" }}
@@ -118,14 +118,7 @@ const WhoWeAre = () => {
                         height={100}
                         width={150}
                         url={data?.videourl}
-                      />
-                      {/* <video
-                        className="absolute top-0 left-0  object-cover"
-                        controls
-                        preload="metadata"
-                      >
-                        <source src={data?.videourl} type="video/mp4" />
-                      </video> */}
+                      />                      
                     </div>
                   </TableCell>
                   <TableCell align="left">{data?.title}</TableCell>
