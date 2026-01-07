@@ -1,125 +1,149 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from 'react';
+// src/components/sliders/UpdateMediaVideo.tsx
+"use client";
+import React, { useState, useEffect } from 'react';
 import useAxiosPublic from '@/axios/useAxiosPublic';
 import apiClient from '@/axios/axiosInstant';
 import toast from 'react-hot-toast';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { TVoiceOnMedia } from '@/types/types';
+import { TVideo } from '@/types/types';
+import { TextField } from '@mui/material';
 
-interface UpdateVoiceOnMediaProps {
-  voiceOnMediaId: string;
-  setOpenModalForUpdate:(value:boolean)=>void
+interface UpdateVideoProps {
+  videoId: string;
+  setOpenModalForUpdate: (value: boolean) => void;
 }
 
-const UpdateMediaVideo: React.FC<UpdateVoiceOnMediaProps> = ({ voiceOnMediaId,setOpenModalForUpdate }) => {
+const UpdateMediaVideo: React.FC<UpdateVideoProps> = ({ videoId, setOpenModalForUpdate }) => {
   const queryClient = useQueryClient();
   const axiosPublic = useAxiosPublic();
-            //  getting VoiceOnMedia
-const {data:media} = useQuery({
-  queryKey:["voiceOnMedia",voiceOnMediaId],
-  queryFn:async()=>{  
-    const response = await axiosPublic.get(`/voice-on-media/${voiceOnMediaId}`);
-    return response.data.data;
-  }
+  const [formData, setFormData] = useState({
+    publishDate: '',
+    videoUrl: '',
+    title: '',
+  });
 
-})
+  const { data: video, isLoading } = useQuery({
+    queryKey: ["voice-on-media", videoId],
+    queryFn: async () => {
+      if (!videoId) return null;
+      const response = await axiosPublic.get(`/voice-on-media/${videoId}`);
+      return response.data.data;
+    },
+    enabled: !!videoId,
+  });
 
-
+  // Update form data when video data is loaded
+  useEffect(() => {
+    if (video) {
+      setFormData({
+        publishDate: video.publishDate ? new Date(video.publishDate).toISOString().split('T')[0] : '',
+        videoUrl: video.videoUrl || '',
+        title: video.title || '',
+      });
+    }
+  }, [video]);
 
   const updateMutation = useMutation({
-    mutationFn: async ({ id, data,e }: { id: string; data: Partial<TVoiceOnMedia>,e: { preventDefault: () => void; target: any; }}) => {
+    mutationFn: async ({ id, data }: { id: string; data: Partial<TVideo> }) => {
       const response = await apiClient.patch(`/voice-on-media/${id}`, data);
-      if(response.data.success===true){
-        e.target.reset();
-        return response.data.data;
-      }
-     
+      return response.data.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['voiceOnMedia'] });
-      toast.success('Media Updated Successfully');
-      setOpenModalForUpdate(false)
+      queryClient.invalidateQueries({ queryKey: ['voice-on-media'] });
+      toast.success('Video updated successfully');
+      setOpenModalForUpdate(false);
     },
     onError: (error: any) => {
-      toast.error(error.response.data.message||'Failed to update Media');
+      toast.error(error.response?.data?.message || 'Failed to update video');
       console.error('Update error:', error);
     },
   });
 
-  const handleSubmit = (e: { preventDefault: () => void; target: any; } ) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const form = e.target;
-
-    const data: Partial<TVoiceOnMedia> = {
-      videoUrl:form.videoUrl.value,
-      title: form.title.value,
-      // date: form.date.value,
-     
+    
+    const data: Partial<TVideo> = {
+      publishDate: formData.publishDate,
+      videoUrl: formData.videoUrl,
+      title: formData.title,
     };
 
-    updateMutation.mutate({ id:voiceOnMediaId, data ,e});
+    console.log('Updating with data:', data);
+    updateMutation.mutate({ id: videoId, data });
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  if (isLoading) {
+    return (
+      <div className="h-full min-h-[500px] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
   return (
-    <div className="h-full min-h-[500px] text-black">
-      
+    <div className="min-h-[500px] lg:w-[600px] text-black bg-white/90 p-6 rounded-lg">
+      <h2 className="text-2xl font-bold text-center mb-8 text-gray-800">
+        Update Video
+      </h2>
 
       <form onSubmit={handleSubmit}>
-        <div className="max-w-4xl 2xl:mt-28 px-6 pt-10 flex flex-col gap-10 justify-between items-center pb-20">
-          <section className="flex flex-col lg:flex-row gap-16">
-            {/* Left Panel: Image, Title, , Date */}
-            <div className="flex flex-col gap-[20px]">
-              
-            <div className="flex flex-col gap-1">
-                <label htmlFor="title">YouTube Video Url</label>
+        <div className="max-w-6xl 2xl:mt-10 px-6 pt-4 flex flex-col gap-8 justify-between items-center pb-12">
+          <section className="flex flex-col lg:flex-row gap-12 w-full">
+            {/* Left side: Form fields */}
+            <div className="flex flex-col gap-6 w-full">
+              {/* Publish Date */}
+              <label htmlFor="publishDate">
+                <p className="text-gray-950 mb-2">Update published Date</p>
                 <input
                   required
-                  defaultValue={media?.videoUrl}
-                  name="videoUrl"
-                  className="md:w-[350px] px-5 py-3 border outline-blue-400 w-[250px] bg-white"
-                  type="text"
-                />
-              </div>
-
-              <div className="flex flex-col gap-1">
-                <label htmlFor="title">Title </label>
-                <input
-                  required
-                  defaultValue={media?.title}
-                  name="title"
-                  className="md:w-[350px] px-5 py-3 border outline-blue-400 w-[250px] bg-white"
-                  type="text"
-                />
-              </div>
-             
-
-             
-
-              {/* <label htmlFor="Date">
-                <p className="text-gray-950 mb-1">Select Date</p>
-                <input
-                  name="date"
-                  required
-                  defaultValue={
-                    media?.date && !isNaN(new Date(media?.date).getTime())
-                      ? new Date(media?.date).toISOString().split('T')[0]
-                      : ''
-                  }
+                  value={formData.publishDate}
+                  onChange={handleChange}
                   type="date"
-                  className="md:w-[350px] w-[250px] bg-white py-3 text-gray-700 px-3"
+                  name="publishDate"
+                  id="publishDate"
+                  className="w-full bg-white py-3 text-gray-700 px-3 border rounded"
                 />
-              </label> */}
-            </div>
+              </label>
 
-          
+              {/* Video URL */}
+              <TextField
+                required
+                name="videoUrl"
+                value={formData.videoUrl}
+                onChange={handleChange}
+                label="Video URL"
+                variant="outlined"
+                fullWidth
+                helperText="Enter YouTube or Facebook video URL"
+              />
+
+              {/* Title */}
+              <TextField
+                required
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+                label="Video Title"
+                variant="outlined"
+                fullWidth
+                placeholder="Enter video title"
+              />
+            </div>
           </section>
 
-          <input
-        
+          <button
             type="submit"
-            value="Submit"
-            className="md:w-[350px] text-white w-[250px] bg-orange-600 py-2 px-3 active:scale-95 lg:w-full"
-          />
+            disabled={updateMutation.isPending}
+            className="w-full max-w-md bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {updateMutation.isPending ? 'Updating...' : 'Update Video'}
+          </button>
         </div>
       </form>
     </div>
@@ -127,53 +151,3 @@ const {data:media} = useQuery({
 };
 
 export default UpdateMediaVideo;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import { TextField } from '@mui/material';
-// import React from 'react';
-
-
-// const UpdateMediaVideo = () => {
-  
-
- 
-//   return (
-//     <div className=' h-full min-h-[500px] '>
-//      <div className='max-w-4xl px-6 pt-10 flex flex-col  gap-10 justify-between items-center pb-20'>    
-    
-     
-//      <TextField 
-//        defaultValue={'https://youtu.be/G_zwNW_0TEw'}
-//      className='md:w-[350px] w-[250px] bg-white' id="outlined-basic" label="Youtube Video Url" variant="outlined" />
-//      <TextField
-//        defaultValue={'Free, Fair and Credible Election | M Rashiduzzaman Millat | Tritiyo Matra Talk show'}
-//      className='md:w-[350px] w-[250px] bg-white' id="outlined-basic" label="Title" variant="outlined" />
-//      <label htmlFor="date">
-//       <p className='text-gray-950 mb-1 '>Select Date</p>
-//      <input type="date" name="date" id="date" className='md:w-[350px] w-[250px] bg-white text-gray-700 py-2 px-3'/>
-//      </label>
-   
-      
-//       <input type="submit" value="Submit" className='md:w-[350px] text-white w-[250px] bg-orange-600 py-2 px-3 active:scale-95' />  
-//      </div>
-//     </div>
-//   );
-// };
-
-// export default UpdateMediaVideo;
