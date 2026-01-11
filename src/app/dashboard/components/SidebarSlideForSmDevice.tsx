@@ -58,7 +58,7 @@ const SidebarSlide = ({
   const pathName = usePathname();
 
   return (
-    <div className="bg-white lg:w-[350px] w-[300px] ">
+    <div className="bg-white lg:w-[350px] w-[300px] text-black">
       {/* logo section  */}
       <div className="flex flex-row lg:justify-center w-full justify-between item-center border-b-2 shadow">
         <Image
